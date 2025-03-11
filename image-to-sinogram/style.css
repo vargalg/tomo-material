@@ -1,0 +1,65 @@
+/* Basic styling for the layout and elements */
+
+body {
+    margin: 0;
+    font-family: sans-serif;
+}
+
+/* Container is full viewport height, split horizontally with flexbox */
+#container {
+    display: flex;
+    height: 100vh; /* fill the full browser window height */
+}
+
+/* LEFT SIDE: fixed or flexible width, we’ll just let it size naturally */
+#leftSide {
+    flex: 0 0 auto;     /* or you can set a fixed width if you prefer */
+    padding: 20px;
+    box-sizing: border-box;
+    background: #f0f0f0;
+    overflow: auto;     /* let it scroll if contents exceed height */
+}
+
+/* RIGHT SIDE: take remaining space, scroll if needed */
+#rightSide {
+    flex: 1 1 auto;
+    overflow: auto;     /* vertical/horizontal scrolling if sinogram is large */
+    background: #ffffff;
+    border-left: 1px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* The drawing canvas on left side */
+#drawCanvas {
+    border: 1px solid #000;
+    cursor: crosshair;
+    display: block;
+    margin-top: 10px;
+}
+
+/* The sinogram canvas on right side */
+#sinogramCanvas {
+    border: 1px solid #000;
+    display: block;
+    margin: 10px 0;
+}
+
+/* Controls area */
+#controls {
+    margin-bottom: 10px;
+}
+
+/* Progress info styling */
+#progressInfo {
+    font-weight: bold;
+    color: #333;
+    margin: 5px 0;
+}
+
+.swatchBtn{
+    width:30px;
+    height:30px;
+    cursor:pointer;
+    margin:8px;
+}

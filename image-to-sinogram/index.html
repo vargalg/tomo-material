@@ -1,10 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="utf-8">
+    <title>Async Sinogram (Row-by-Row Updates)</title>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-$END$
+
+<div id="container">
+    <!-- LEFT SIDE -->
+    <div id="leftSide">
+
+        <h1>Async Sinogram (Row-by-Row)</h1>
+
+        <div id="controls">
+
+            <label>
+                Number of Angles:
+                <input type="range" id="angleSlider" min="1" max="1440" value="180">
+                <span id="angleValue">180</span>
+            </label>
+            <label>
+                Rotation angle:
+                <input type="range" id="numRotationsSlider" min="0" max="4" step="0.1" value="1">
+                <span id="numRotationsValue">1</span>
+            </label>
+            &nbsp;<button id="sinogramBtn">Compute Sinogram</button>
+
+            <p id="progressInfo"></p>
+        </div>
+
+        <div>
+            <div style="display:inline-block;width:150px;vertical-align:top">
+                <label>
+                    Brush size:
+                    <input type="range" id="brushSize" min="1" max="50" value="5" style="width: 100%">
+                </label>
+                <br />
+                <label>
+                    Color
+                    <input
+                            type="color"
+                            id="colorPicker"
+                            value="#FFFFFF"
+                            style="display:block; margin-bottom:8px; width:100%;"
+                    >
+                    <button
+                            class="swatchBtn"
+                            data-color="#FFFFFF"
+                            style="background-color:white;"
+                    ></button>
+                    <button
+                            class="swatchBtn"
+                            data-color="#000000"
+                            style="background-color:black;"
+                    ></button>
+                    <br />
+                    <button
+                            class="swatchBtn"
+                            data-color="#FF0000"
+                            style="background-color:red;"
+                    ></button>
+                    <button
+                            class="swatchBtn"
+                            data-color="#00FF00"
+                            style="background-color:green;"
+                    ></button>
+                    <button
+                            class="swatchBtn"
+                            data-color="#0000FF"
+                            style="background-color:blue;"
+                    ></button>
+                    <br />
+                    <button
+                            class="swatchBtn"
+                            data-color="#00FFFF"
+                            style="background-color:cyan;"
+                    ></button>
+                    <button
+                            class="swatchBtn"
+                            data-color="#FF00FF"
+                            style="background-color:magenta;"
+                    ></button>
+                    <button
+                            class="swatchBtn"
+                            data-color="#FFFF00"
+                            style="background-color:yellow;"
+                    ></button>
+                </label>
+                <br />
+                <label>
+                    Load image:
+                    <input type="file" id="fileInput" accept="image/*">
+                </label>
+                <br />
+                <label>
+                    <button id="clearBtn">Clear</button>
+                </label>
+            </div>
+            <canvas style="display:inline-block;" id="drawCanvas" width="512" height="512"></canvas>
+        </div>
+
+    </div>
+
+    <!-- RIGHT SIDE: scrollable sinogram output -->
+    <div id="rightSide">
+        <!-- The sinogram will be drawn here -->
+        <canvas id="sinogramCanvas" width="512" height="180"></canvas>
+    </div>
+</div>
+
+<!-- Include external JS at the end of body -->
+<script src="script.js"></script>
+
 </body>
 </html>
