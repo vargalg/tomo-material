@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Fanbeam and Helcal Conebeam Example</title>
+    <!-- Link to your external CSS file -->
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<!-- Left column: 2D canvas -->
+<div class="left-column" id="page-left">
+    <div class="controls">
+        <label for="angleSlider">
+            Projection Angle: <span id="angleValue">0</span>°
+        </label>
+        <input type="range" id="angleSlider" min="-360" max="360" value="0" />
+    </div>
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+</div>
+
+<!-- Right column: Three.js scene -->
+<div class="right-column"></div>
+
+<!-- Polyfill for ES modules (needed if you support older browsers).
+     If you only target modern browsers, you may omit es-module-shims. -->
+<script async src="../common/dist/es-module-shims.js"></script>
+
+<!-- Import map pointing to local three.js files -->
+<script type="importmap">
+    {
+      "imports": {
+        "three": "../common/js-r167/build/three.module.js",
+        "TrackballControls": "../common/js-r167/examples/jsm/controls/TrackballControls.js",
+        "OrbitControls": "../common/js-r167/examples/jsm/controls/OrbitControls.js"
+      }
+    }
+</script>
+
+<!-- 2D logic (non-module) -->
+<script src="fanbeam.js"></script>
+
+<!-- 3D logic (module) -->
+<script type="module" src="conebeam.js"></script>
+</body>
+</html>

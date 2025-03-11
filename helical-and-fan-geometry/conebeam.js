@@ -1,5 +1,5 @@
 /*******************************************************
- * right.js
+ * conebeam.js
  * Handles the Three.js scene on the right side.
  * This file is loaded as a module, so we can import
  * 'three' and related controls via the import map.

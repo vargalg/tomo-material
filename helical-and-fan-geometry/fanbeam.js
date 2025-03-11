@@ -1,5 +1,5 @@
 /*******************************************************
- * left.js
+ * fanbeam.js
  * Handles the 2D canvas logic: the dot, the FOV circle,
  * and user interaction (mouse + angle slider).
  *******************************************************/
