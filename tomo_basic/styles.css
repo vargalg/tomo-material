@@ -1,0 +1,118 @@
+:root {
+    /* Customize grid size and cell dimensions here */
+    --grid-size: 8;                   /* N x N cells */
+    --cell-size: 30px;                /* width/height of each cell */
+    --cell-gap: 2px;                  /* gap between cells */
+    --bar-scale-horizontal: 10px;     /* px of bar width per white cell */
+    --bar-scale-vertical: 5px;        /* px of bar height per white cell */
+}
+
+body {
+    margin: 20px;
+    font-family: sans-serif;
+}
+
+h1 {
+    margin-bottom: 10px;
+}
+
+/* Container to hold the grid + projections in a fixed layout */
+#container {
+    position: relative;
+    /* Enough width for the grid plus the horizontal bars region */
+    width: calc(
+            var(--grid-size) * (var(--cell-size) + var(--cell-gap)) + 120px
+    );
+    /* Enough height for the grid plus vertical bars region */
+    height: calc(
+            var(--grid-size) * (var(--cell-size) + var(--cell-gap)) + 120px
+    );
+    border: 1px solid #ccc;
+}
+
+/* The main grid of squares (N x N), absolutely placed at top-left */
+#grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--grid-size), var(--cell-size));
+    grid-gap: var(--cell-gap);
+}
+
+.cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    background-color: black;
+    border: 1px solid #666;
+    cursor: pointer;
+    user-select: none;   /* prevent text selection on drag */
+}
+
+/* Horizontal projection container: to the right of the grid. */
+#horizontalProjections {
+    position: absolute;
+    top: 0;
+    left: calc(
+            var(--grid-size) * (var(--cell-size) + var(--cell-gap)) + 10px
+    );
+    width: 80px; /* You can adjust if you need more space for bars */
+    height: calc(var(--grid-size) * (var(--cell-size) + var(--cell-gap)));
+    border: 1px solid #444;
+    background-color: #f5f5f5;
+    overflow: visible;
+}
+
+/* A vertical "reference line" at left for horizontal bars */
+#hRefLine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #000;
+}
+
+/* Each horizontal bar is placed absolutely by row, growing to the right */
+.horizontal-bar {
+    position: absolute;
+    height: var(--cell-size);
+    background-color: #999;
+    left: 0;
+    width: 0;
+    /* The 'top' offset is set in JS for each row */
+}
+
+/* Vertical projection container: below the grid. */
+#verticalProjections {
+    position: absolute;
+    top: calc(
+            var(--grid-size) * (var(--cell-size) + var(--cell-gap)) + 10px
+    );
+    left: 0;
+    width: calc(var(--grid-size) * (var(--cell-size) + var(--cell-gap)));
+    height: 80px;
+    border: 1px solid #444;
+    background-color: #f5f5f5;
+    overflow: visible;
+}
+
+/* A horizontal "reference line" at the top for vertical bars (growing down) */
+#vRefLine {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 2px;
+    background-color: #000;
+}
+
+/* Vertical bars, anchored from top (2px below reference line), grow downward */
+.vertical-bar {
+    position: absolute;
+    width: var(--cell-size);
+    background-color: #999;
+    top: 2px;
+    height: 0;
+    /* The 'left' offset is set in JS for each column */
+}

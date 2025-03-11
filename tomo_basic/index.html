@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Tomography Projections Demo – Draw by Dragging</title>
+
+    <!-- Link the external CSS -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- jQuery (optional, but used here for simplicity) -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            crossorigin="anonymous"></script>
+
+    <!-- Link the external JS (defer to ensure DOM is ready) -->
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+<h1>Tomography Projections Demo – Draw by Dragging</h1>
+
+<div id="container">
+    <!-- The main N x N grid -->
+    <div id="grid"></div>
+
+    <!-- Horizontal Projections region (right) -->
+    <div id="horizontalProjections">
+        <div id="hRefLine"></div>
+        <!-- We'll place row bars here dynamically -->
+    </div>
+
+    <!-- Vertical Projections region (bottom) -->
+    <div id="verticalProjections">
+        <div id="vRefLine"></div>
+        <!-- We'll place column bars here dynamically -->
+    </div>
+</div>
+
+</body>
+</html>
