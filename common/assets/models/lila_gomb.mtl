@@ -1,0 +1,12 @@
+# Blender MTL File: 'lila_gomb.blend'
+# Material Count: 1
+
+newmtl SphereMaterial
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.024779 0.036245 0.800000
+Ks 0.750000 0.750000 0.750000
+Ke 0.418854 0.041697 0.318730
+Ni 1.450000
+d 0.900000
+illum 9
