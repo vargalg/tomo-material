@@ -16,6 +16,26 @@
         <input type="range" id="angleSlider" min="-360" max="360" value="0" />
     </div>
     <canvas id="myCanvas" width="500" height="500"></canvas>
+    <div class="help-box">
+        <p><strong>Instructions:</strong></p>
+        <ul>
+            <li>
+                Left-hand side
+                <ul>
+                    <li>Use the slider or scroll to change the projection angle.</li>
+                    <li>Click and drag inside the circle to move the red dot (that is a pixel position in the FOV).</li>
+                    <li>The green line is the projection line going through the selected pixel having specific direction.</li>
+                    <li> red lines show the edges of the projection geometry.</li>
+                </ul>
+            </li>
+            <li>
+                Left-hand side: 3d View of helical geometry.
+                <ul>
+                    <li>Can be inspected (tilted, rotated, zoomed) using mouse.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 </div>
 
 <!-- Right column: Three.js scene -->

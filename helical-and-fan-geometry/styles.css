@@ -45,3 +45,28 @@ body {
     background-color: #e0e0e0;
     position: relative; /* so we can position the renderer's canvas inside */
 }
+
+.help-box {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #333;
+    max-width: 450px;
+}
+
+.help-box p {
+    margin: 0 0 0.5rem 0;
+    font-weight: bold;
+}
+
+.help-box ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.help-box li {
+    margin: 0.2rem 0;
+}
