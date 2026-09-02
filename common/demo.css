@@ -1,0 +1,97 @@
+/* Shared design tokens and base styles for the tomo-material demos.
+   Link this BEFORE each demo's own stylesheet:
+
+     <link rel="stylesheet" href="../common/demo.css">
+     <link rel="stylesheet" href="styles.css">
+*/
+
+:root {
+    color-scheme: light dark;
+    --bg: #f7f7f8;
+    --fg: #1c1c1e;
+    --muted: #5f6368;
+    --card-bg: #ffffff;
+    --border: #d9d9de;
+    --accent: #1266d6;
+    --accent-soft: rgba(18, 102, 214, 0.14);
+    --radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #17181a;
+        --fg: #e6e6e8;
+        --muted: #a0a0a8;
+        --card-bg: #212226;
+        --border: #34353a;
+        --accent: #5aa2ff;
+        --accent-soft: rgba(90, 162, 255, 0.16);
+    }
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.55;
+    color: var(--fg);
+    background: var(--bg);
+}
+
+/* Centered-content page wrapper (used by demos that are not full-viewport apps) */
+.page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+}
+
+.backlink {
+    display: inline-block;
+    margin-bottom: 1.25rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+.backlink:hover { color: var(--accent); }
+
+.page-header { margin-bottom: 1.75rem; }
+.page-header h1 { margin: 0 0 0.4rem; font-size: 1.7rem; }
+.page-header p { margin: 0; color: var(--muted); max-width: 62ch; }
+.page-header strong { color: var(--fg); }
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+}
+.controls label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+button {
+    font: inherit;
+    color: var(--fg);
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.85rem;
+    cursor: pointer;
+    transition: border-color 0.12s ease, color 0.12s ease;
+}
+button:hover { border-color: var(--accent); color: var(--accent); }
+
+input[type="range"] { accent-color: var(--accent); }

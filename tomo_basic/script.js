@@ -1,5 +1,5 @@
-// This variable tracks whether we paint white or black
-// based on the color of the first cell clicked.
+// Tracks whether the current drag paints cells on or off,
+// decided by the state of the first cell pressed.
 let mouse_drawing = false;
 
 $(function() {
@@ -20,16 +20,16 @@ $(function() {
         }
     }
 
-    // Create horizontal bars, one per row
+    // Create horizontal bars, one per row (each carries a running-total label)
     for (let row = 0; row < N; row++) {
-        const hBar = $('<div class="horizontal-bar"></div>');
+        const hBar = $('<div class="horizontal-bar"><span class="bar-label"></span></div>');
         hBar.data('row', row);
         $('#horizontalProjections').append(hBar);
     }
 
     // Create vertical bars, one per column
     for (let col = 0; col < N; col++) {
-        const vBar = $('<div class="vertical-bar"></div>');
+        const vBar = $('<div class="vertical-bar"><span class="bar-label"></span></div>');
         vBar.data('col', col);
         $('#verticalProjections').append(vBar);
     }
@@ -81,37 +81,45 @@ $(function() {
             }
         });
 
-        // Update horizontal bars
+        // Update horizontal bars: one segment per painted cell, plus the total
         $('#horizontalProjections .horizontal-bar').each(function() {
             const rowIdx = $(this).data('row');
             const count = rowCounts[rowIdx];
-            const topOffset = rowIdx * (cellSize + cellGap);
             $(this).css({
-                top: topOffset + 'px',
+                top: (rowIdx * (cellSize + cellGap)) + 'px',
                 width: (count * barScaleH) + 'px'
             });
+            $(this).toggleClass('is-zero', count === 0);
+            $(this).find('.bar-label').text(count);
         });
 
-        // Update vertical bars (grow downward from top=2px)
+        // Update vertical bars (grow downward from the reference line)
         $('#verticalProjections .vertical-bar').each(function() {
             const colIdx = $(this).data('col');
             const count = colCounts[colIdx];
-            const leftOffset = colIdx * (cellSize + cellGap);
             $(this).css({
-                left: leftOffset + 'px',
+                left: (colIdx * (cellSize + cellGap)) + 'px',
                 height: (count * barScaleV) + 'px'
             });
+            $(this).toggleClass('is-zero', count === 0);
+            $(this).find('.bar-label').text(count);
         });
     }
 
-    // Helper to set a cell's color (based on mouse_drawing)
+    // Helper to set a cell's state (based on mouse_drawing)
     function paintCell($cell) {
-        // Paint all cells with the same color as determined at mousedown
+        // Paint every dragged cell with the state decided at mousedown
         const nowWhite = mouse_drawing;
         $cell.data('isWhite', nowWhite);
-        $cell.css('background-color', nowWhite ? 'white' : 'black');
+        $cell.toggleClass('on', nowWhite);
         updateProjections();
     }
+
+    // Clear button: reset every cell to the empty state
+    $('#clearBtn').on('click', function() {
+        $('#grid .cell').removeClass('on').data('isWhite', false);
+        updateProjections();
+    });
 
     // On mousedown, decide if we're painting white or black
     $('#grid .cell').on('mousedown', function(e) {

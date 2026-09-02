@@ -1,40 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Tomography Projections Demo – Draw by Dragging</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Basic projections — tomo-material</title>
 
-    <!-- Link the external CSS -->
+    <link rel="stylesheet" href="../common/demo.css">
     <link rel="stylesheet" href="styles.css">
 
-    <!-- jQuery (optional, but used here for simplicity) -->
+    <!-- jQuery (used here to keep the demo code short) -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
             crossorigin="anonymous"></script>
 
-    <!-- Link the external JS (defer to ensure DOM is ready) -->
     <script src="script.js" defer></script>
 </head>
 <body>
+<div class="page">
+    <a class="backlink" href="../">← all demos</a>
 
-<h1>Tomography Projections Demo – Draw by Dragging</h1>
+    <header class="page-header">
+        <h1>Basic projections</h1>
+        <p>
+            Click and drag on the grid to paint cells. Each bar to the right and
+            below is a <strong>projection</strong> — the 1-D shadow the image
+            casts in that direction. Every bar is split into one segment per
+            painted cell in that row or column, with the total printed at its
+            end.
+        </p>
+    </header>
 
-<div id="container">
-    <!-- The main N x N grid -->
-    <div id="grid"></div>
+    <div class="card demo-card">
+        <div class="controls">
+            <button id="clearBtn" type="button">Clear grid</button>
+        </div>
 
-    <!-- Horizontal Projections region (right) -->
-    <div id="horizontalProjections">
-        <div id="hRefLine"></div>
-        <!-- We'll place row bars here dynamically -->
-    </div>
+        <div id="container">
+            <!-- The main N x N grid -->
+            <div id="grid"></div>
 
-    <!-- Vertical Projections region (bottom) -->
-    <div id="verticalProjections">
-        <div id="vRefLine"></div>
-        <!-- We'll place column bars here dynamically -->
+            <!-- Horizontal projections (right of the grid) -->
+            <div id="horizontalProjections">
+                <div id="hRefLine"></div>
+            </div>
+
+            <!-- Vertical projections (below the grid) -->
+            <div id="verticalProjections">
+                <div id="vRefLine"></div>
+            </div>
+        </div>
     </div>
 </div>
-
 </body>
 </html>
