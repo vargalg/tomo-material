@@ -2,117 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Async Sinogram (Row-by-Row Updates)</title>
-    <!-- Link to external CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Image → sinogram — tomo-material</title>
+
+    <link rel="stylesheet" href="../common/demo.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="page">
+    <a class="backlink" href="../">← all demos</a>
 
-<div id="container">
-    <!-- LEFT SIDE -->
-    <div id="leftSide">
+    <header class="page-header">
+        <h1>Image → sinogram</h1>
+        <p>
+            Paint on the canvas or load an image, choose how many projection
+            angles to take and over how many rotations, then compute the
+            <strong>sinogram</strong> — it fills in one row per angle, each row
+            being the parallel-beam projection of the object at that angle.
+        </p>
+    </header>
 
-        <h1>Async Sinogram (Row-by-Row)</h1>
+    <div class="card">
+        <div class="sino-stage">
 
-        <div id="controls">
+            <!-- Object -->
+            <section class="stage-col">
+                <div class="panel-head">Object</div>
 
-            <label>
-                Number of Angles:
-                <input type="range" id="angleSlider" min="1" max="1440" value="180">
-                <span id="angleValue">180</span>
-            </label>
-            <label>
-                Rotation angle:
-                <input type="range" id="numRotationsSlider" min="0" max="4" step="0.1" value="1">
-                <span id="numRotationsValue">1</span>
-            </label>
-            &nbsp;<button id="sinogramBtn">Compute Sinogram</button>
+                <div class="tool-row">
+                    <label>
+                        Brush
+                        <input type="range" id="brushSize" min="1" max="50" value="5">
+                    </label>
 
-            <p id="progressInfo"></p>
+                    <label>
+                        Colour
+                        <input type="color" id="colorPicker" value="#FFFFFF">
+                    </label>
+
+                    <div class="swatches">
+                        <button class="swatchBtn" data-color="#FFFFFF" style="background-color:#FFFFFF;" title="White"></button>
+                        <button class="swatchBtn" data-color="#000000" style="background-color:#000000;" title="Black"></button>
+                        <button class="swatchBtn" data-color="#FF0000" style="background-color:#FF0000;" title="Red"></button>
+                        <button class="swatchBtn" data-color="#00FF00" style="background-color:#00FF00;" title="Green"></button>
+                        <button class="swatchBtn" data-color="#0000FF" style="background-color:#0000FF;" title="Blue"></button>
+                        <button class="swatchBtn" data-color="#00FFFF" style="background-color:#00FFFF;" title="Cyan"></button>
+                        <button class="swatchBtn" data-color="#FF00FF" style="background-color:#FF00FF;" title="Magenta"></button>
+                        <button class="swatchBtn" data-color="#FFFF00" style="background-color:#FFFF00;" title="Yellow"></button>
+                    </div>
+
+                    <label class="file-label">
+                        Load image
+                        <input type="file" id="fileInput" accept="image/*">
+                    </label>
+
+                    <button id="clearBtn" type="button">Clear canvas</button>
+                </div>
+
+                <div class="canvas-wrap">
+                    <canvas id="drawCanvas" width="512" height="512"></canvas>
+                </div>
+            </section>
+
+            <!-- Sinogram -->
+            <section class="stage-col">
+                <div class="panel-head">
+                    <span>Sinogram</span>
+                    <span id="progressInfo" class="progress"></span>
+                </div>
+
+                <div class="controls">
+                    <label>
+                        Angles
+                        <input type="range" id="angleSlider" min="1" max="1440" value="180">
+                        <span id="angleValue" class="ctl-value">180</span>
+                    </label>
+                    <label>
+                        Rotations
+                        <input type="range" id="numRotationsSlider" min="0" max="4" step="0.1" value="1">
+                        <span id="numRotationsValue" class="ctl-value">1</span>
+                    </label>
+                    <button id="sinogramBtn" type="button">Compute sinogram</button>
+                </div>
+
+                <div class="sino-wrap">
+                    <canvas id="sinogramCanvas" width="600" height="180"></canvas>
+                </div>
+            </section>
+
         </div>
-
-        <div>
-            <div style="display:inline-block;width:150px;vertical-align:top">
-                <label>
-                    Brush size:
-                    <input type="range" id="brushSize" min="1" max="50" value="5" style="width: 100%">
-                </label>
-                <br />
-                <label>
-                    Color
-                    <input
-                            type="color"
-                            id="colorPicker"
-                            value="#FFFFFF"
-                            style="display:block; margin-bottom:8px; width:100%;"
-                    >
-                    <button
-                            class="swatchBtn"
-                            data-color="#FFFFFF"
-                            style="background-color:white;"
-                    ></button>
-                    <button
-                            class="swatchBtn"
-                            data-color="#000000"
-                            style="background-color:black;"
-                    ></button>
-                    <br />
-                    <button
-                            class="swatchBtn"
-                            data-color="#FF0000"
-                            style="background-color:red;"
-                    ></button>
-                    <button
-                            class="swatchBtn"
-                            data-color="#00FF00"
-                            style="background-color:green;"
-                    ></button>
-                    <button
-                            class="swatchBtn"
-                            data-color="#0000FF"
-                            style="background-color:blue;"
-                    ></button>
-                    <br />
-                    <button
-                            class="swatchBtn"
-                            data-color="#00FFFF"
-                            style="background-color:cyan;"
-                    ></button>
-                    <button
-                            class="swatchBtn"
-                            data-color="#FF00FF"
-                            style="background-color:magenta;"
-                    ></button>
-                    <button
-                            class="swatchBtn"
-                            data-color="#FFFF00"
-                            style="background-color:yellow;"
-                    ></button>
-                </label>
-                <br />
-                <label>
-                    Load image:
-                    <input type="file" id="fileInput" accept="image/*">
-                </label>
-                <br />
-                <label>
-                    <button id="clearBtn">Clear</button>
-                </label>
-            </div>
-            <canvas style="display:inline-block;" id="drawCanvas" width="512" height="512"></canvas>
-        </div>
-
-    </div>
-
-    <!-- RIGHT SIDE: scrollable sinogram output -->
-    <div id="rightSide">
-        <!-- The sinogram will be drawn here -->
-        <canvas id="sinogramCanvas" width="512" height="180"></canvas>
     </div>
 </div>
 
-<!-- Include external JS at the end of body -->
 <script src="script.js"></script>
-
 </body>
 </html>

@@ -1,65 +1,133 @@
-/* Basic styling for the layout and elements */
+/* "Image → sinogram" demo — layout + visuals.
+   Shared tokens (--bg, --fg, --accent, …) and the .page / .card / .controls
+   components come from ../common/demo.css. */
 
-body {
-    margin: 0;
-    font-family: sans-serif;
-}
+/* Wider than the default page: the object and the sinogram sit side by side. */
+.page { max-width: 1200px; }
 
-/* Container is full viewport height, split horizontally with flexbox */
-#container {
+.panel-head {
     display: flex;
-    height: 100vh; /* fill the full browser window height */
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: 1.05rem;
 }
 
-/* LEFT SIDE: fixed or flexible width, we’ll just let it size naturally */
-#leftSide {
-    flex: 0 0 auto;     /* or you can set a fixed width if you prefer */
-    padding: 20px;
-    box-sizing: border-box;
-    background: #f0f0f0;
-    overflow: auto;     /* let it scroll if contents exceed height */
+.progress {
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: var(--muted);
 }
 
-/* RIGHT SIDE: take remaining space, scroll if needed */
-#rightSide {
-    flex: 1 1 auto;
-    overflow: auto;     /* vertical/horizontal scrolling if sinogram is large */
-    background: #ffffff;
-    border-left: 1px solid #ccc;
-    padding: 10px;
-    box-sizing: border-box;
+.ctl-value {
+    min-width: 2.5ch;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    font-weight: 500;
 }
 
-/* The drawing canvas on left side */
+/* --- Two-column stage --- */
+
+.sino-stage {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.75rem;
+    align-items: flex-start;
+}
+
+.stage-col {
+    flex: 1 1 440px;
+    min-width: 0;
+}
+
+/* --- Object toolbar (horizontal strip above the canvas) --- */
+
+.tool-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.7rem 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.tool-row label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.tool-row input[type="range"] { width: 104px; }
+
+.tool-row input[type="color"] {
+    width: 34px;
+    height: 28px;
+    padding: 2px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--card-bg);
+    cursor: pointer;
+}
+
+.file-label input {
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 400;
+    max-width: 150px;
+}
+
+.swatches {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.swatchBtn {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.08s ease, border-color 0.08s ease;
+}
+.swatchBtn:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+}
+
+/* --- Canvases --- */
+
+.canvas-wrap { width: 100%; }
+
 #drawCanvas {
-    border: 1px solid #000;
+    display: block;
+    width: 100%;
+    max-width: 520px;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #000;
     cursor: crosshair;
-    display: block;
-    margin-top: 10px;
+    touch-action: none;
 }
 
-/* The sinogram canvas on right side */
+.sino-wrap {
+    width: fit-content;
+    max-width: 100%;
+    overflow: auto;
+    max-height: 70vh;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+}
+
 #sinogramCanvas {
-    border: 1px solid #000;
     display: block;
-    margin: 10px 0;
-}
-
-/* Controls area */
-#controls {
-    margin-bottom: 10px;
-}
-
-/* Progress info styling */
-#progressInfo {
-    font-weight: bold;
-    color: #333;
-    margin: 5px 0;
-}
-
-.swatchBtn{
-    width:30px;
-    height:30px;
-    cursor:pointer;
-    margin:8px;
+    max-width: 100%;
+    height: auto;
+    image-rendering: pixelated;
 }

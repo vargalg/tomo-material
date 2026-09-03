@@ -94,9 +94,13 @@ canvas.addEventListener('mousemove', (e) => {
 
 function getMousePos(evt) {
     const rect = canvas.getBoundingClientRect();
+    // The canvas is displayed responsively (CSS size != pixel size), so map
+    // pointer coordinates back into the canvas's own pixel space.
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
     return [
-        evt.clientX - rect.left,
-        evt.clientY - rect.top
+        (evt.clientX - rect.left) * scaleX,
+        (evt.clientY - rect.top) * scaleY
     ];
 }
 
@@ -143,7 +147,7 @@ function computeSinogramAsync() {
     // Grab user parameters
     const nAngles = parseInt(angleSlider.value, 10);
     const detectorCount = 600;
-    const numRotation = parseInt(numRotationsSlider.value);
+    const numRotation = parseFloat(numRotationsSlider.value); // slider steps by 0.1
 
     // Setup sinogram canvas
     sinogramCanvas.width  = detectorCount;
@@ -235,7 +239,7 @@ function computeSinogramAsync() {
         renderSoFar(a);
 
         // Progress
-        progressInfo.textContent = `Row ${a+1}/${nAngles} done...`;
+        progressInfo.textContent = `angle ${a + 1} / ${nAngles}`;
 
         // Move to next row in next animation frame
         currentAngleIndex++;
