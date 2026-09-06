@@ -11,7 +11,8 @@ import { OrbitControls } from 'OrbitControls';
 // Basic references
 let scene, camera, renderer;
 let controls;
-let scene_group;
+let scene_group;      // the gantry: source + detector + fan, travels along the helix
+let reference_group;  // the fixed reconstruction grid, stays at z = 0
 
 // Example objects
 let mesh_slice;
@@ -40,8 +41,11 @@ function initThree() {
     const width = rightColumn.clientWidth;
     const height = rightColumn.clientHeight;
     camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
-    // Position or rotate camera as needed
-    camera.position.y = 800;
+    // Start almost straight above the grid (looking down the helix axis, so the
+    // 3D view initially matches the 2D one), but tilted just enough to avoid the
+    // degenerate "up vector parallel to view" case and to hint at the helix.
+    camera.position.set(0, 780, 120);
+    camera.lookAt(0, 0, 0);
 
     // Create renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -52,20 +56,29 @@ function initThree() {
     rightColumn.appendChild(renderer.domElement);
 
     // Add OrbitControls or TrackballControls for navigation
-    controls = new OrbitControls(camera, rightColumn);
-    controls.rotateSpeed = 5.0;
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.rotateSpeed = 1.2;
     controls.panSpeed = 1.0;
+    controls.target.set(0, 0, 0);
+    controls.update();
 
-    // Create a group that we can rotate, etc.
+    // Static reference frame: the reconstruction grid lives here. It stays at
+    // z = 0 and never moves - it is the fixed reference the gantry travels around.
+    reference_group = new THREE.Group();
+    reference_group.rotation.x = -Math.PI / 2;
+    scene.add(reference_group);
+
+    // The gantry group (source + detector + fan). It orbits the helix axis and
+    // climbs by one pitch per turn, so the source rides the magenta helix.
     scene_group = new THREE.Group();
     scene_group.rotation.x = -Math.PI / 2;
     scene.add(scene_group);
 
-    // Example geometry: a plane for the "slice"
+    // Example geometry: a plane for the "slice" (the fixed reconstruction grid)
     let geometry = new THREE.PlaneGeometry(2 * fov_radius, 2 * fov_radius, 20, 20);
     let material = new THREE.MeshBasicMaterial({ color: 'blue', wireframe: true });
     mesh_slice = new THREE.Mesh(geometry, material);
-    scene_group.add(mesh_slice);
+    reference_group.add(mesh_slice);
 
     // Create a group for the detector/source
     const projection_group = new THREE.Group();
@@ -103,11 +116,11 @@ function initThree() {
 
     scene_group.add(projection_group);
 
-    // "Pixel" sphere
+    // "Pixel" sphere - a point in the fixed grid, so it belongs to reference_group
     geometry = new THREE.SphereGeometry(5);
     material = new THREE.MeshBasicMaterial({ color: 'red' });
     mesh_pixel = new THREE.Mesh(geometry, material);
-    scene_group.add(mesh_pixel);
+    reference_group.add(mesh_pixel);
 
     // A simple ArrowHelper for the ray
     let dir = new THREE.Vector3(0, 1, 0);
@@ -145,32 +158,32 @@ function initThree() {
 function animateThree() {
     requestAnimationFrame(animateThree);
 
-    // If you want to read the same dotX, dotY from the 2D side, you need to
-    // fetch them from window or a shared data store. For now, let's assume
-    // we still define them here or replicate the logic.
-
-    // Example: read global variables from left side (if you store them on window)
-    // let { dotX, dotY, centerX, centerY } = window.leftState; // if you had set that up
-
-    // The following lines assume we have the same 2D variables in global scope
-    // if fanbeam.js sets them on window or so. Otherwise, replicate the logic.
-
-    // We do have references to:
-    //   dotX, dotY, centerX, centerY, focusDistance, projectionAngle
-    // from the fanbeam.js scope. If they are truly global, this will work:
+    // dotX, dotY, centerX, centerY, focusDistance and projectionAngle come from
+    // fanbeam.js - top-level `const`/`let` there live in the global lexical scope,
+    // which this module shares.
     let rad = (projectionAngle + 90) * Math.PI / 180;
     const focusPoint = getIntersectionWithCircle(dotX, dotY, rad, centerX, centerY, focusDistance);
+    if (!focusPoint) {
+        controls.update();
+        renderer.render(scene, camera);
+        return;
+    }
 
-    let proj_dir = Math.atan2(centerX - focusPoint.x, centerY - focusPoint.y);
+    // Angular position of the source on the focus circle - i.e. the fan-beam
+    // view that actually contains the requested (direction, point) ray.
+    const proj_dir = Math.atan2(centerX - focusPoint.x, centerY - focusPoint.y);
 
-    // Rotation around the Z axis
+    // Orbit the gantry about the helix axis (local Z, which is world "up" after
+    // the -90 deg tilt). The grid never moves; only this group does.
     scene_group.rotation.z = proj_dir + Math.PI;
 
-    rad -= Math.PI / 2;
-    proj_dir = Math.PI - proj_dir;
-    proj_dir = rad + ((proj_dir - rad + Math.PI) % (2 * Math.PI)) - Math.PI;
-    let height = proj_dir / (2 * Math.PI);
-    scene_group.position.z = -height * pitch;
+    // Climb the helix: unwrap the source angle so it follows the projection
+    // angle continuously, then advance by one pitch per full turn. For most
+    // views the source ends up above / below the grid plane - which is exactly
+    // why the requested in-plane ray is generally not measured in a helical scan.
+    const projRad = projectionAngle * Math.PI / 180;
+    const beta = -projRad + wrapToPi((proj_dir - Math.PI) + projRad);
+    scene_group.position.y = (beta / (2 * Math.PI)) * pitch;
 
     // Move the "pixel" object to the dot location (relative to center)
     mesh_pixel.position.set(dotX - centerX, -(dotY - centerY), 0);
@@ -200,6 +213,11 @@ function onWindowResize() {
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
+}
+
+// Wrap an angle to (-pi, pi].
+function wrapToPi(a) {
+    return a - 2 * Math.PI * Math.round(a / (2 * Math.PI));
 }
 
 /**

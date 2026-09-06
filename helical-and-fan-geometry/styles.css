@@ -1,72 +1,87 @@
-/* Global layout */
-body {
-    margin: 0;
-    padding: 0;
-    display: flex; /* Use flexbox to create a two-column layout */
-    height: 100vh; /* Fill the full window height */
-    font-family: sans-serif;
-    /* If you want to prevent page scrolling via mouse wheel:
-       overflow: hidden;
-    */
-}
+/* "Fan-beam & helical geometry" demo — layout + visuals.
+   Shared tokens (--bg, --fg, --accent, …) and the .page / .card / .controls
+   / .page-header components come from ../common/demo.css. */
 
-/* Left column: 2D canvas + controls */
-.left-column {
-    flex: 1;
+/* Two wide panels sit side by side. */
+.page { max-width: 1180px; }
+
+/* Scroll the interactive area horizontally rather than overflow on narrow
+   screens — the 2D canvas is a fixed 500 px so its mouse mapping stays 1:1. */
+.card { overflow-x: auto; }
+
+.stage {
     display: flex;
-    flex-direction: column; /* Stacks controls and canvas vertically */
-    align-items: center;
-    justify-content: start;
-    background-color: #f0f0f0;
-    padding: 1rem;
-    box-sizing: border-box;
+    flex-wrap: wrap;
+    gap: 1.75rem;
+    align-items: flex-start;
 }
 
-.controls {
+.stage-col { min-width: 0; }
+.stage-2d { flex: 0 0 auto; }
+.stage-3d { flex: 1 1 380px; min-width: 320px; }
+
+.panel-head {
     margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: 1.05rem;
 }
 
-.controls label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
+.controls { margin-bottom: 1rem; }
+
+.ctl-value {
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    font-weight: 500;
 }
 
 #myCanvas {
-    background: #ffffff;
-    border: 1px solid #ccc;
-    width: 500px;  /* displayed width */
-    height: 500px; /* displayed height */
+    display: block;
+    width: 500px;
+    height: 500px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    cursor: crosshair;
+    touch-action: none;
 }
 
-/* Right column: the Three.js scene will go here */
+/* Three.js mounts its <canvas> here; conebeam.js reads this element's size. */
 .right-column {
-    flex: 1;
-    background-color: #e0e0e0;
-    position: relative; /* so we can position the renderer's canvas inside */
+    position: relative;
+    width: 100%;
+    height: 520px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #000;
+    overflow: hidden;
 }
+.right-column canvas { display: block; }
 
-.help-box {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    background-color: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+/* --- Explanatory text under the interactive area --- */
+
+.help {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    display: grid;
+    gap: 1.1rem 2.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     font-size: 0.9rem;
-    color: #333;
-    max-width: 450px;
+    color: var(--muted);
 }
 
-.help-box p {
-    margin: 0 0 0.5rem 0;
-    font-weight: bold;
-}
-
-.help-box ul {
+.help-lead {
+    grid-column: 1 / -1;
+    max-width: 68ch;
     margin: 0;
-    padding-left: 1.2rem;
 }
 
-.help-box li {
-    margin: 0.2rem 0;
+.help h3 {
+    margin: 0 0 0.4rem;
+    font-size: 0.95rem;
+    color: var(--fg);
 }
+
+.help ul { margin: 0; padding-left: 1.1rem; }
+.help li { margin: 0.3rem 0; }
+.help strong { color: var(--fg); }

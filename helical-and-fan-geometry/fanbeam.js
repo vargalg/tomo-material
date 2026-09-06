@@ -3,7 +3,6 @@
  * Handles the 2D canvas logic: the dot, the FOV circle,
  * and user interaction (mouse + angle slider).
  *******************************************************/
-const screenLeft = document.getElementById('page-left');
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -36,8 +35,9 @@ angleSlider.addEventListener('input', () => {
     angleValue.textContent = projectionAngle;
 });
 
-// Also allow scroll to change angle on the left column
-screenLeft.addEventListener('wheel', (event) => {
+// Also allow scroll over the canvas to change the angle (leaving the wheel free
+// to scroll the help text below it).
+canvas.addEventListener('wheel', (event) => {
     event.preventDefault(); // block page scrolling
     // Adjust angle by wheel
     projectionAngle += event.deltaY * 0.1;

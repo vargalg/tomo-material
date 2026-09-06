@@ -1,51 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Fanbeam and Helcal Conebeam Example</title>
-    <!-- Link to your external CSS file -->
-    <link rel="stylesheet" href="styles.css" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fan-beam &amp; helical geometry — tomo-material</title>
+
+    <link rel="stylesheet" href="../common/demo.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<!-- Left column: 2D canvas -->
-<div class="left-column" id="page-left">
-    <div class="controls">
-        <label for="angleSlider">
-            Projection Angle: <span id="angleValue">0</span>°
-        </label>
-        <input type="range" id="angleSlider" min="-360" max="360" value="0" />
-    </div>
-    <canvas id="myCanvas" width="500" height="500"></canvas>
-    <div class="help-box">
-        <p><strong>Instructions:</strong></p>
-        <ul>
-            <li>
-                Left-hand side
+<div class="page">
+    <a class="backlink" href="../">← all demos</a>
+
+    <header class="page-header">
+        <h1>Fan-beam &amp; helical geometry</h1>
+        <p>
+            Pick a parallel-beam ray &mdash; a direction through a point &mdash;
+            and the 2D fan-beam view finds the source that measured it. The
+            synchronised 3D scene shows why that ray is usually missing in a
+            helical cone-beam scan: the source sits off the slice plane.
+        </p>
+    </header>
+
+    <div class="card">
+        <div class="stage">
+            <!-- 2D fan-beam slice -->
+            <section class="stage-col stage-2d">
+                <div class="controls">
+                    <label for="angleSlider">
+                        Projection angle
+                        <input type="range" id="angleSlider" min="-360" max="360" value="0">
+                        <span class="ctl-value"><span id="angleValue">0</span>&deg;</span>
+                    </label>
+                </div>
+                <canvas id="myCanvas" width="500" height="500"></canvas>
+            </section>
+
+            <!-- 3D helical cone-beam scene -->
+            <section class="stage-col stage-3d">
+                <div class="panel-head">Helical cone-beam view</div>
+                <div class="right-column"></div>
+            </section>
+        </div>
+
+        <div class="help">
+            <p class="help-lead">
+                <strong>Fan-beam to parallel-beam rebinning.</strong> You pick a
+                parallel-beam ray &mdash; a direction plus a point it passes
+                through &mdash; and the demo finds the fan-beam view that
+                actually recorded it. In a 2D scan that ray always exists. On the
+                right the matching source is placed on a helical cone-beam path:
+                it sits off the slice plane, so the ray it really measures tilts
+                out of plane and the in-plane ray you asked for is usually
+                missing.
+            </p>
+
+            <div>
+                <h3>Left &mdash; 2D fan-beam slice</h3>
                 <ul>
-                    <li>Use the slider or scroll to change the projection angle.</li>
-                    <li>Click and drag inside the circle to move the red dot (that is a pixel position in the FOV).</li>
-                    <li>The green line is the projection line going through the selected pixel having specific direction.</li>
-                    <li> red lines show the edges of the projection geometry.</li>
+                    <li>Slider, or mouse-wheel over the canvas: set the projection angle.</li>
+                    <li>Drag inside the blue circle: move the red point (a position in the field of view).</li>
+                    <li><strong>Green</strong> &mdash; the requested ray (fixed direction through the red point) and the detector it reaches.</li>
+                    <li><strong>Magenta</strong> &mdash; the source; it orbits the circle, positioned so its fan ray is the requested ray.</li>
+                    <li><strong>Red</strong> &mdash; the edges of the fan beam that just covers the field of view.</li>
                 </ul>
-            </li>
-            <li>
-                Left-hand side: 3d View of helical geometry.
+            </div>
+
+            <div>
+                <h3>Right &mdash; 3D helical cone-beam</h3>
                 <ul>
-                    <li>Can be inspected (tilted, rotated, zoomed) using mouse.</li>
+                    <li>Drag to rotate, scroll to zoom. Starts looking down the rotation axis, matching the 2D view.</li>
+                    <li>The blue grid is the slice being reconstructed &mdash; fixed at z = 0.</li>
+                    <li>Source and detector ride the magenta helix, climbing one pitch per turn.</li>
+                    <li>The yellow arrow is the ray from source to the red point &mdash; tilt the view and for most angles it leaves the slice plane.</li>
                 </ul>
-            </li>
-        </ul>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Right column: Three.js scene -->
-<div class="right-column"></div>
-
-<!-- Polyfill for ES modules (needed if you support older browsers).
-     If you only target modern browsers, you may omit es-module-shims. -->
+<!-- Polyfill for browsers without import-map support -->
 <script async src="../common/dist/es-module-shims.js"></script>
 
-<!-- Import map pointing to local three.js files -->
 <script type="importmap">
     {
       "imports": {
